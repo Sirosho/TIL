@@ -1,0 +1,370 @@
+# ✅ GIT과 버전관리시스템 정리
+<br><br>
+<br><br>
+
+## ✅ 코드 품질이란?
+- 수정이 용이하고 가독성이 좋은 코드
+
+
+<br><br><br>
+
+## ✅ Git이란?
+- **버전 관리 시스템**: 파일의 변경 이력을 추적하고 협업에 유리한 도구
+- **Git으로 작업한 것을 업로드하는 곳**: GitHub, GitLab 등
+<br><br>
+
+<br><br>
+## ✅ Git 사용 방법
+1. **CLI** (명령어 기반): Git Bash, 터미널
+2. **GUI** (그래픽 기반): SourceTree, GitHub Desktop, GitKraken 등
+<br><br><br>
+---
+
+## ✅ Git 설치 후 기본 설정
+
+```bash
+$ git config --global user.name "유저닉네임"     # GitHub/GitLab 닉네임
+$ git config --global user.email "유저이메일"   # 실제 GitHub/GitLab 가입 이메일
+$ git config --global init.defaultBranch main   # 기본 브랜치를 master → main으로 변경
+```
+
+🔹master 용어는 인종차별 논란으로 인해 main 사용이 권장된다.
+
+🔹게다가 GitHub는 기본 브랜치가 main 이므로 Git 설정을 맞춰두는 것이 비교적 좋다.
+
+
+
+
+🔹```$ git config --list``` 명령어로 현재 설정된 Git 정보를 확인할 수 있다!
+
+
+
+---------------------
+
+
+✅ Git Bash 기본 명령어
+| 명령어             | 설명                 |
+| --------------- | ------------------ |
+| `pwd`           | 현재 위치 출력           |
+| `ls`            | 하위 폴더/파일 목록        |
+| `ls -l`         | 상세 목록 (권한, 수정시간 등) |
+| `ls -a`         | 숨김파일까지 표시          |
+| `clear`         | 터미널 화면 정리          |
+| `cd ..`         | 한 단계 상위 폴더 이동      |
+| `cd ~`          | 홈 디렉토리로 이동         |
+| `mkdir 이름`      | 폴더 생성              |
+| `touch 파일명.확장자` | 파일 생성              |
+| `notepad 파일명`   | 메모장으로 열기           |
+| `code 파일명`      | VSCode로 열기         |
+| `code .`        | 현재 폴더를 VSCode로 열기  |
+| `start .`       | 탐색기로 현재 폴더 열기      |
+| `rm 파일명`        | 파일 삭제              |
+| `rm -rf 폴더명`    | 폴더 삭제 (내용까지 사라지니주의!)        |
+
+<br><br>
+
+🔹Git Bash는 리눅스 명령어 기반이다.<br>
+🔹Windows의 CMD와는 명령어가 다르다.<br>
+🔹이를 완화하기 위해 리눅스 명령어를 사용할 수 있는 PowerShell이 있다.<br>
+
+
+
+
+
+
+
+
+<br><br>
+-----
+<br> <br><br><br>
+
+
+
+# ✅ Git 버전 관리 시작
+## 1. 저장소 초기화
+
+```bash
+$ git init
+```
+- **현재 폴더를 Git이 추적하도록 설정 (로컬 저장소 생성)**
+- **git init은 한 저장소 내에서 한 번만 실행해야 함**
+<br><br><br>
+---
+## 2. 상태 확인
+```bash
+$ git status
+```
+<br>
+
+- **현재 변경된 파일 상태를 확인 (수정됨, 추가됨 등)**
+
+
+
+
+<br><br><br><br>
+
+
+
+
+
+# ✅ Git 워크플로우<br><br>
+## 1.작업<br>
+## 2.파일 추가 (Add)<br>
+## 3.커밋 (Commit)<br>
+
+<br><br><br>
+
+
+# ✅ Git 주요 명령어
+<br><br>
+
+|명령어|	설명|
+|--------------|----------------|
+|`git add` 파일명|	커밋 대상으로 추가|
+|`git add .`|	전체 파일 추가        |
+|`git commit -m "메시지"`|	커밋 생성|
+|`git log`          |	커밋 이력 확인          |
+|`git log --oneline`|	간결한 커밋 로그 확인|
+
+
+
+<br>
+
+### :large_blue_circle:커밋 메시지 작성 팁
+- **제목 + 본문 형식**
+- **본문은 72자 이내 유지 권장**
+- **Ai 기반 커밋 메시지 생성 툴도 있음**
+
+
+<br><br>
+### ✅ 커밋 관련 명령어
+
+<br><br>
+
+
+``git commit --amend``	**직전 커밋 수정 (로컬 전용 이라고 생각하자!)**
+
+<br>
+
+**🔹[주의] 이미 GitHub에 공유된 커밋에 대해 amend를 하면 히스토리가 꼬이고 협업에 불편함 발생**
+
+<br><br>
+
+``git restore --staged 파일명``	**add한 파일을 unstage**
+
+---
+<br><br><br>
+
+
+### ✅ Git Ignore
+
+<br><br>
+```bash
+$ touch .gitignore
+```
+- **.gitignore 파일은 Git이 무시할 파일/폴더를 지정하는 설정 파일**
+- **보안상 중요한 정보를 포함하는 파일같은 경우는 Git Ignore를 이용하여 유출을 막는다!**
+
+예시 패턴
+```.gitignore
+*.log          # 모든 .log 파일 무시
+!important.log # important.log는 무시하지 않음
+/tmp           # 루트 디렉토리의 tmp 폴더만 무시
+debug/         # debug 폴더 무시
+doc/*.txt      # doc 폴더 내 .txt 파일 무시
+```
+
+<br>
+
+- *.gitignore 파일은 이미 커밋된 파일에는 영향을 미치지 않음.*
+- *gitignore.io 라는 사이트에서 개발언어별로 .GitIgnore 템플릿을 적어줌*
+
+
+
+
+# ✅ GIT과 버전관리시스템 정리
+<br><br>
+<br><br>
+
+## ✅ 코드 품질이란?
+- 수정이 용이하고 가독성이 좋은 코드
+
+
+<br><br><br>
+
+## ✅ Git이란?
+- **버전 관리 시스템**: 파일의 변경 이력을 추적하고 협업에 유리한 도구
+- **Git으로 작업한 것을 업로드하는 곳**: GitHub, GitLab 등
+<br><br>
+
+<br><br>
+## ✅ Git 사용 방법
+1. **CLI** (명령어 기반): Git Bash, 터미널
+2. **GUI** (그래픽 기반): SourceTree, GitHub Desktop, GitKraken 등
+<br><br><br>
+---
+
+## ✅ Git 설치 후 기본 설정
+
+```bash
+$ git config --global user.name "유저닉네임"     # GitHub/GitLab 닉네임
+$ git config --global user.email "유저이메일"   # 실제 GitHub/GitLab 가입 이메일
+$ git config --global init.defaultBranch main   # 기본 브랜치를 master → main으로 변경
+```
+
+🔹master 용어는 인종차별 논란으로 인해 main 사용이 권장된다.
+
+🔹게다가 GitHub는 기본 브랜치가 main 이므로 Git 설정을 맞춰두는 것이 비교적 좋다.
+
+
+
+
+🔹```$ git config --list``` 명령어로 현재 설정된 Git 정보를 확인할 수 있다!
+
+
+
+---------------------
+
+
+✅ Git Bash 기본 명령어
+| 명령어             | 설명                 |
+| --------------- | ------------------ |
+| `pwd`           | 현재 위치 출력           |
+| `ls`            | 하위 폴더/파일 목록        |
+| `ls -l`         | 상세 목록 (권한, 수정시간 등) |
+| `ls -a`         | 숨김파일까지 표시          |
+| `clear`         | 터미널 화면 정리          |
+| `cd ..`         | 한 단계 상위 폴더 이동      |
+| `cd ~`          | 홈 디렉토리로 이동         |
+| `mkdir 이름`      | 폴더 생성              |
+| `touch 파일명.확장자` | 파일 생성              |
+| `notepad 파일명`   | 메모장으로 열기           |
+| `code 파일명`      | VSCode로 열기         |
+| `code .`        | 현재 폴더를 VSCode로 열기  |
+| `start .`       | 탐색기로 현재 폴더 열기      |
+| `rm 파일명`        | 파일 삭제              |
+| `rm -rf 폴더명`    | 폴더 삭제 (내용까지 사라지니주의!)        |
+
+<br><br>
+
+🔹Git Bash는 리눅스 명령어 기반이다.<br>
+🔹Windows의 CMD와는 명령어가 다르다.<br>
+🔹이를 완화하기 위해 리눅스 명령어를 사용할 수 있는 PowerShell이 있다.<br>
+
+
+
+
+
+
+
+
+<br><br>
+-----
+<br> <br><br><br>
+
+
+
+# ✅ Git 버전 관리 시작
+## 1. 저장소 초기화
+
+```bash
+$ git init
+```
+- **현재 폴더를 Git이 추적하도록 설정 (로컬 저장소 생성)**
+- **git init은 한 저장소 내에서 한 번만 실행해야 함**
+<br><br><br>
+---
+## 2. 상태 확인
+```bash
+$ git status
+```
+<br>
+
+- **현재 변경된 파일 상태를 확인 (수정됨, 추가됨 등)**
+
+
+
+
+<br><br><br><br>
+
+
+
+
+
+# ✅ Git 워크플로우<br><br>
+## 1.작업<br>
+## 2.파일 추가 (Add)<br>
+## 3.커밋 (Commit)<br>
+
+<br><br><br>
+
+
+# ✅ Git 주요 명령어
+<br><br>
+
+|명령어|	설명|
+|--------------|----------------|
+|`git add` 파일명|	커밋 대상으로 추가|
+|`git add .`|	전체 파일 추가        |
+|`git commit -m "메시지"`|	커밋 생성|
+|`git log`          |	커밋 이력 확인          |
+|`git log --oneline`|	간결한 커밋 로그 확인|
+
+
+
+<br>
+
+### :large_blue_circle:커밋 메시지 작성 팁
+- **제목 + 본문 형식**
+- **본문은 72자 이내 유지 권장**
+- **Ai 기반 커밋 메시지 생성 툴도 있음**
+
+
+<br><br>
+### ✅ 커밋 관련 명령어
+
+<br><br>
+
+
+``git commit --amend``	**직전 커밋 수정 (로컬 전용 이라고 생각하자!)**
+
+<br>
+
+**🔹[주의] 이미 GitHub에 공유된 커밋에 대해 amend를 하면 히스토리가 꼬이고 협업에 불편함 발생**
+
+<br><br>
+
+``git restore --staged 파일명``	**add한 파일을 unstage**
+
+---
+<br><br><br>
+
+
+### ✅ Git Ignore
+
+<br><br>
+```bash
+$ touch .gitignore
+```
+- **.gitignore 파일은 Git이 무시할 파일/폴더를 지정하는 설정 파일**
+- **보안상 중요한 정보를 포함하는 파일같은 경우는 Git Ignore를 이용하여 유출을 막는다!**
+
+예시 패턴
+```.gitignore
+*.log          # 모든 .log 파일 무시
+!important.log # important.log는 무시하지 않음
+/tmp           # 루트 디렉토리의 tmp 폴더만 무시
+debug/         # debug 폴더 무시
+doc/*.txt      # doc 폴더 내 .txt 파일 무시
+```
+
+<br>
+
+- *.gitignore 파일은 이미 커밋된 파일에는 영향을 미치지 않음.*
+- *gitignore.io 라는 사이트에서 개발언어별로 .GitIgnore 템플릿을 적어줌*
+
+
+
+
+
+<br><br><br>

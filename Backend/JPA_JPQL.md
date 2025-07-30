@@ -5,11 +5,12 @@
 * **SQL과 비슷하지만, 테이블이 아니라 엔터티(Entity)와 필드명을 기준으로 작성**
 * SELECT 절에는 **엔터티나 엔터티의 필드명**을 사용
 * FROM 절에는 **테이블명이 아니라 엔터티명**을 사용 (보통 클래스명)
+<div style="margin-top:80px;"></div>
 
 ### ✅ 기본 예시
 
 ```java
-@Query(value="SELECT s FROM Student s WHERE s.city = ?1")
+@Query("SELECT s FROM Student s WHERE s.city = ?1")
 List<Student> findByCity(String city);
 ```
 
@@ -21,6 +22,8 @@ SELECT * FROM tbl_student WHERE city = ?
 
 ---
 
+<div style="margin-top:80px;"></div>
+
 ## 2. **JPQL vs SQL 차이**
 
 | 구분    | JPQL        | SQL        |
@@ -31,6 +34,8 @@ SELECT * FROM tbl_student WHERE city = ?
 | 실행 시점 | 애플리케이션 레벨   | DB 레벨      |
 
 ---
+
+<div style="margin-top:80px;"></div>
 
 ## 3. **파라미터 바인딩 방법**
 
@@ -52,6 +57,8 @@ List<Student> findByCity(@Param("city") String city);
 
 ---
 
+<div style="margin-top:80px;"></div>
+
 ## 4. **DTO로 조회**
 
 엔터티 전체 말고 특정 필드만 조회하고 싶을 때:
@@ -64,6 +71,8 @@ List<StudentDTO> findStudentDTOByCity(@Param("city") String city);
 ➡️ `new` 키워드를 사용 → DTO 생성자 호출
 
 ---
+
+<div style="margin-top:80px;"></div>
 
 ## 5. **JPQL 사용 시 주의할 점**
 
@@ -101,6 +110,8 @@ List<StudentDTO> findStudentDTOByCity(@Param("city") String city);
    * 조건이 상황마다 바뀌는 경우 → QueryDSL이나 Specification을 사용 권장
 
 ---
+
+<div style="margin-top:80px;"></div>
 
 ## 6. **정리된 예시**
 
@@ -163,6 +174,8 @@ public interface StudentRepository extends JpaRepository<Student, String> {
 
 ---
 
+<div style="margin-top:80px;"></div>
+
 ## 2. 성능 차이
 
 ### 엔티티 조회
@@ -204,6 +217,8 @@ FROM tbl_student;
 
 ---
 
+<div style="margin-top:80px;"></div>
+
 ## 3. 성능 비교 표
 
 | 항목           | 엔티티 조회       | DTO 조회               |
@@ -215,6 +230,8 @@ FROM tbl_student;
 | 추천 상황        | 수정/저장 필요한 경우 | 조회 전용 API, 대량 데이터 조회 |
 
 ---
+
+<div style="margin-top:80px;"></div>
 
 ## 4. Projection (인터페이스 기반) 비교
 
@@ -235,6 +252,8 @@ List<StudentProjection> findStudentProjections();
 
 ---
 
+<div style="margin-top:80px;"></div>
+
 ## 5. JPA 조회 방식 종합 비교
 
 | 구분                | 엔티티 조회                      | DTO 조회 (JPQL `new`)      | Projection 조회          |
@@ -250,6 +269,8 @@ List<StudentProjection> findStudentProjections();
 
 ---
 
+<div style="margin-top:80px;"></div>
+
 ## ✅ 결론
 
 * 엔티티 조회는 **CRUD 및 수정/저장 로직**에 적합하다.
@@ -261,3 +282,100 @@ List<StudentProjection> findStudentProjections();
 * CRUD 작업 → 엔티티 조회
 * 조회 전용 API, 대규모 리스트/페이징 → DTO 조회
 * 단순 조회 화면 → Projection 조회
+
+
+
+
+
+
+
+
+
+<div style="margin-top:100px;"></div>
+
+
+
+
+
+# 📌 @Query 어노테이션 구조
+
+Spring Data JPA의 `@Query`는 다음과 같은 속성을 가질 수 있다:
+
+```java
+@Query(
+    value = "JPQL or Native SQL",
+    nativeQuery = false,
+    countQuery = "JPQL for count"
+)
+```
+
+<div style="margin-top:80px;"></div>
+
+## ✅ 주요 속성
+
+| 속성              | 설명                                      | 기본값                   |
+| --------------- | --------------------------------------- | --------------------- |
+| **value**       | 실행할 JPQL 또는 SQL                         | 필수 (생략 시 첫 번째 값으로 인식) |
+| **nativeQuery** | `true`면 Native SQL 사용, `false`면 JPQL 사용 | false                 |
+| **countQuery**  | 페이징 처리 시 전체 개수를 세는 별도 쿼리 지정             | 없음                    |
+
+---
+
+<div style="margin-top:80px;"></div>
+
+## ✅ 왜 `value =` 를 생략할 수 있나?
+
+자바 어노테이션 규칙 때문이야.
+
+* 어노테이션의 \*\*속성이 하나만 있고 이름이 `value`\*\*라면
+  속성명을 생략할 수 있음.
+
+### 예시 (동일 의미)
+
+```java
+@Query("SELECT s FROM Student s WHERE s.city = ?1")
+List<Student> findByCity(String city);
+
+@Query(value = "SELECT s FROM Student s WHERE s.city = ?1")
+List<Student> findByCity(String city);
+```
+
+둘 다 똑같이 동작 ✅
+
+---
+
+<div style="margin-top:80px;"></div>
+
+## ✅ 괄호 안에 들어올 수 있는 다른 경우
+
+### 1. `nativeQuery` 같이 사용
+
+```java
+@Query(
+    value = "SELECT * FROM tbl_student WHERE city = ?1",
+    nativeQuery = true
+)
+List<Student> findByCityNative(String city);
+```
+
+### 2. 페이징에서 `countQuery` 추가
+
+```java
+@Query(
+    value = "SELECT s FROM Student s WHERE s.city = :city",
+    countQuery = "SELECT COUNT(s) FROM Student s WHERE s.city = :city"
+)
+Page<Student> findByCity(@Param("city") String city, Pageable pageable);
+```
+
+---
+
+<div style="margin-top:80px;"></div>
+
+## 📌 정리
+
+* `@Query`에서 `value=`는 생략 가능 (자바 어노테이션 기본 규칙)
+* 하지만 `nativeQuery`, `countQuery` 등 **추가 속성과 같이 쓸 때**는 구분을 위해 `value=`를 명시하는 경우가 많음
+* 따라서 **간단한 JPQL 한 줄**이면 생략해도 되지만,
+  **속성이 여러 개일 땐 value= 를 붙여주는 게 가독성과 안정성에 좋음**
+

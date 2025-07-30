@@ -9,7 +9,7 @@
 ### ✅ 기본 예시
 
 ```java
-@Query("SELECT s FROM Student s WHERE s.city = ?1")
+@Query(value="SELECT s FROM Student s WHERE s.city = ?1")
 List<Student> findByCity(String city);
 ```
 

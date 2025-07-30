@@ -244,12 +244,9 @@ class ProductRepositoryTest {
 ---
 
 ## 5. 쿼리 메서드 (Query Methods)
+Spring Data JPA에서 메서드 이름을 규칙에 맞게 작성하면, SQL(JPQL) 쿼리를 자동으로 생성해주는 기능이다.
+JpaRepository를 상속받은 인터페이스에 익명매서드로 선언하여 사용한다.
 
-> **참고 문서**
-> - [Spring Data JPA - Reference Documentation](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.query-methods.query-creation)
-> - [JPA Query Methods :: Spring Data JPA](https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html)
-
-Spring Data JPA는 Repository 인터페이스에 정해진 규칙에 따라 메서드를 선언하면, 해당 메서드 이름을 분석하여 자동으로 JPQL 쿼리를 생성하고 실행하는 강력한 기능을 제공한다.
 
 ### 5.1. 쿼리 메서드 작성 규칙
 

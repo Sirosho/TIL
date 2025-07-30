@@ -14,6 +14,10 @@
 List<Student> findByCity(String city);
 ```
 
+### ? 옆에는 입력 파라미터의 인덱스를 뜻함.
+### 2개를 입력받으면 ?1, ?2 이렇게 입력받는 파라미터의 순서대로 인덱스를 바인딩 해줘야한다.
+
+
 ➡️ 변환되는 SQL
 
 ```sql
@@ -378,4 +382,6 @@ Page<Student> findByCity(@Param("city") String city, Pageable pageable);
 * 하지만 `nativeQuery`, `countQuery` 등 **추가 속성과 같이 쓸 때**는 구분을 위해 `value=`를 명시하는 경우가 많음
 * 따라서 **간단한 JPQL 한 줄**이면 생략해도 되지만,
   **속성이 여러 개일 땐 value= 를 붙여주는 게 가독성과 안정성에 좋음**
+
+
 

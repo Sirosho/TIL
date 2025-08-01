@@ -156,14 +156,7 @@ Spring JPA와 JDBC 사이에서 **복잡한 조회를 깔끔하게 처리**할 �
 
 
 
-
-아주 좋은 질문이에요 승현님 👍
-정확히 짚으셨어요. `JPAQueryFactory`는 Spring Boot가 기본으로 **빈 등록해주지 않아요**.
-그래서 Config 클래스를 만들어 Bean으로 등록해두면, 매번 `new JPAQueryFactory(em)`를 안 해도 돼요.
-
----
-
-
+<div style="margin-top:80px;"></div>
 
 # 📌 JPAQueryFactory 는 자동 빈등록이 안된다.
 
@@ -232,10 +225,51 @@ public void someMethod() {
 
 ---
 
-👉 한 줄 요약:
+<div style="margin-top:80px;"></div>
 
-> **Config에서 JPAQueryFactory를 Bean으로 등록하면 한 번만 생성하고, 필요한 곳에 주입받아 편하게 쓸 수 있다.**
 
----
 
-승현님, 원하시면 제가 이걸 **Spring Boot 프로젝트 구조 그림**으로도 그려드릴까요? (Config → Bean → Repository 흐름)
+# 📌 QueryDSL 매서드
+
+| SQL 구문                            | QueryDSL 메서드/사용법                                       | 예제 코드                                                                                |
+| --------------------------------- | ------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| **SELECT**                        | `.select()`, `.selectFrom()`                           | `query.select(member).from(member).fetch();`                                         |
+| **DISTINCT**                      | `.distinct()`                                          | `query.select(member.username).distinct().from(member).fetch();`                     |
+| **JOIN (INNER JOIN)**             | `.join()`                                              | `.selectFrom(member).join(member.team, team).fetch();`                               |
+| **LEFT JOIN**                     | `.leftJoin()`                                          | `.selectFrom(member).leftJoin(member.team, team).fetch();`                           |
+| **RIGHT JOIN**                    | `.rightJoin()`                                         | `.selectFrom(member).rightJoin(member.team, team).fetch();`                          |
+| **FETCH JOIN (즉시 로딩)**            | `.fetchJoin()`                                         | `.selectFrom(member).join(member.team, team).fetchJoin().fetch();`                   |
+| **ON 조건**                         | `.on()`                                                | `.join(member.team, team).on(team.name.eq("A팀"));`                                   |
+| **CROSS JOIN**                    | `.from().join()`                                       | `.from(member, team).fetch();`                                                       |
+| **WHERE**                         | `.where()`                                             | `.where(member.age.gt(20));`                                                         |
+| **AND**                           | `.and()` 또는 쉼표`,`                                      | `.where(member.age.gt(20), member.username.eq("승현"));`                               |
+| **OR**                            | `.or()`                                                | `.where(member.age.gt(20).or(member.username.eq("승현")));`                            |
+| **IN / NOT IN**                   | `.in()`, `.notIn()`                                    | `.where(member.age.in(20, 25, 30));`                                                 |
+| **BETWEEN**                       | `.between()`                                           | `.where(member.age.between(20, 30));`                                                |
+| **LIKE / NOT LIKE**               | `.like()`, `.notLike()`, `.contains()`                 | `.where(member.username.contains("승"));`                                             |
+| **IS NULL / NOT NULL**            | `.isNull()`, `.isNotNull()`                            | `.where(member.team.isNotNull());`                                                   |
+| **비교 연산자**                        | `.eq()`, `.ne()`, `.gt()`, `.goe()`, `.lt()`, `.loe()` | `.where(member.age.goe(20).and(member.age.loe(30)));`                                |
+| **ORDER BY**                      | `.orderBy()`                                           | `.orderBy(member.age.desc(), member.username.asc());`                                |
+| **GROUP BY**                      | `.groupBy()`                                           | `.groupBy(team.name);`                                                               |
+| **HAVING**                        | `.having()`                                            | `.groupBy(team.name).having(member.age.avg().gt(25));`                               |
+| **LIMIT / OFFSET**                | `.limit()`, `.offset()`                                | `.offset(20).limit(10).fetch();`                                                     |
+| **COUNT / AVG / SUM / MAX / MIN** | `.count()`, `.avg()`, `.sum()`, `.max()`, `.min()`     | `.select(member.age.avg());`                                                         |
+| **CASE WHEN THEN**                | `.when().then().otherwise()`                           | `member.age.when(20).then("스무살").otherwise("기타")`                                    |
+| **EXISTS / NOT EXISTS**           | `JPAExpressions.exists()`, `.notExists()`              | `.where(JPAExpressions.selectOne().from(subMember).where(...).exists());`            |
+| **SUBQUERY**                      | `JPAExpressions`                                       | `.where(member.age.eq(JPAExpressions.select(subMember.age.max()).from(subMember)));` |
+| **UPDATE**                        | `queryFactory.update()`                                | `.update(member).set(member.username, "변경").where(member.age.lt(20)).execute();`     |
+| **DELETE**                        | `queryFactory.delete()`                                | `.delete(member).where(member.age.gt(60)).execute();`                                |
+| **INSERT**                        | ❌ (지원 X, JPA persist 사용)                               | `em.persist(new Member("승현"));`                                                      |
+| **COALESCE**                      | `Expressions.coalesce()`                               | `.select(Expressions.coalesce(member.nickname, "익명"));`                              |
+| **NULLIF**                        | `Expressions.nullif()`                                 | `.select(Expressions.nullif(member.username, "익명"));`                                |
+
+
+<div style="margin-top:80px;"></div>
+
+📌 **특이사항**
+
+* `INSERT` 는 QueryDSL이 지원하지 않음 → `EntityManager.persist()` 사용.
+* `UNION`, `INTERSECT` 같은 집합 연산도 지원하지 않음 → Native SQL 필요.
+* `ANY / SOME` 는 컬렉션 연관관계 (`OneToMany`) 에서만 사용 가능.
+* `CASE WHEN` 은 단순 값 매핑(`.when().then().otherwise()`) 방식으로만 가능.
+

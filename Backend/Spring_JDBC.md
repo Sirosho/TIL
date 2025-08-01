@@ -187,3 +187,71 @@ public class UserRowMapper implements RowMapper<User> {
 | `SingleColumnRowMapper` | 단일 컬럼만 매핑                   | 이름 목록, 숫자 리스트 등 단순 SELECT 용도 |
 
 
+## 예시코드
+
+
+```java
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+public class PlayerRepository {
+
+    private final JdbcTemplate jdbcTemplate;
+
+    public PlayerRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    // RowMapper 정의
+    private final RowMapper<Player> playerRowMapper = (rs, rowNum) -> {
+        Player player = new Player();
+        player.setId(rs.getLong("id"));
+        player.setName(rs.getString("name"));
+        player.setAge(rs.getInt("age"));
+        player.setPosition(rs.getString("position"));
+        player.setWar(rs.getDouble("war"));
+        return player;
+    };
+
+    // 1. INSERT
+    public void save(Player player) {
+        String sql = "INSERT INTO players (name, age, position, war) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
+                player.getName(),
+                player.getAge(),
+                player.getPosition(),
+                player.getWar());
+    }
+
+    // 2. SELECT ALL
+    public List<Player> findAll() {
+        String sql = "SELECT * FROM players";
+        return jdbcTemplate.query(sql, playerRowMapper);
+    }
+
+    // 3. SELECT BY ID
+    public Optional<Player> findById(Long id) {
+        String sql = "SELECT * FROM players WHERE id = ?";
+        List<Player> result = jdbcTemplate.query(sql, playerRowMapper, id);
+        return result.stream().findFirst();
+    }
+
+    // 4. UPDATE
+    public int update(Long id, String position, double war) {
+        String sql = "UPDATE players SET position = ?, war = ? WHERE id = ?";
+        return jdbcTemplate.update(sql, position, war, id);
+    }
+
+    // 5. DELETE
+    public int delete(Long id) {
+        String sql = "DELETE FROM players WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
+}
+```
